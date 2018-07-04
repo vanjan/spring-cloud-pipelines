@@ -27,7 +27,7 @@ function build() {
 	trap "{ rm -rf \$tmpDir; }" EXIT
 	artifactLocation="${tmpDir}/${artifactName}"
 	echo "Packaging the sources to [${artifactLocation}]"
-	"${TAR_BIN}" -czf "${artifactLocation}" ./*
+	"${TAR_BIN}" -czf "${artifactLocation}" .
 	local changedGroupId
 	# shellcheck disable=SC2005
 	changedGroupId="$(echo "$(retrieveGroupId)" | tr . /)"
