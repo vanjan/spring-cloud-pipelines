@@ -8,7 +8,7 @@ setup() {
 	export TEMP_DIR="$( mktemp -d )"
 	export ENVIRONMENT="test"
 	export PAAS_TYPE="dummy"
-	export PROJECT_TYPE="dummy"
+	export LANGUAGE_TYPE="dummy"
 
 	ln -s "${FIXTURES_DIR}/pipeline-dummy.sh" "${SOURCE_DIR}"
 	ln -s "${FIXTURES_DIR}/pipeline-dummy.sh" "${SOURCE_DIR}/projectType"
@@ -296,6 +296,7 @@ teardown() {
 }
 
 @test "should return jvm language type for maven" {
+	export LANGUAGE_TYPE=""
 	cd "${TEMP_DIR}/maven/build_project"
 
 	# to get the env vars
@@ -306,6 +307,7 @@ teardown() {
 }
 
 @test "should return jvm language type for gradle" {
+	export LANGUAGE_TYPE=""
 	cd "${TEMP_DIR}/gradle/build_project"
 
 	# to get the env vars
@@ -327,8 +329,34 @@ teardown() {
 	assert_success
 }
 
+@test "should return custom language type if set in descriptor" {
+	cd "${TEMP_DIR}/generic/php_repo"
+	export LANGUAGE_TYPE=""
+	export PROJECT_NAME="php"
+
+	# to get the env vars
+	source "${SOURCE_DIR}/pipeline.sh"
+
+	assert_equal "${LANGUAGE_TYPE}" "php"
+	assert_success
+}
+
+@test "should return php if composer is there" {
+	cd "${TEMP_DIR}/generic/multi_module"
+	export LANGUAGE_TYPE=""
+	export PROJECT_NAME="php_project"
+	touch "${TEMP_DIR}/generic/multi_module/composer.json"
+
+	# to get the env vars
+	source "${SOURCE_DIR}/pipeline.sh"
+
+	assert_equal "${LANGUAGE_TYPE}" "php"
+	assert_success
+}
+
 @test "should return language type from descriptor" {
 	cd "${TEMP_DIR}/generic/php_repo"
+	export LANGUAGE_TYPE=""
 	export PROJECT_NAME="php"
 
 	# to get the env vars

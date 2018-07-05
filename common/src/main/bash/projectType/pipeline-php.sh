@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -e
+set -o errexit
+set -o errtrace
+set -o pipefail
 
 export COMPOSER_BIN PHP_BIN
 COMPOSER_BIN="${COMPOSER_BIN:-composer}"
@@ -62,7 +64,7 @@ function downloadAppBinary() {
 	local success="false"
 	curl -u "${M2_SETTINGS_REPO_USERNAME}:${M2_SETTINGS_REPO_PASSWORD}" "${pathToArtifact}" -o "${destination}" --fail && success="true"
 	local outputDir
-	outputDir="${OUTPUT_FOLDER}/${SOURCE_ARTIFACT_TYPE}"
+	outputDir="${OUTPUT_FOLDER}/${SOURCE_ARTIFACT_TYPE_NAME}"
 	mkdir -p "${outputDir}"
 	if [[ "${success}" == "true" ]]; then
 		echo "File downloaded successfully!"

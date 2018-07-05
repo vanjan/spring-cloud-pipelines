@@ -227,7 +227,7 @@ function deployAppNoStart() {
 	local artifactType
 	artifactType="$( getArtifactType )"
 	echo "Project has artifact type [${artifactType}]"
-	if [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE}" ]]; then
+	if [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE_NAME}" ]]; then
 		local dir
 		dir="$(pathToUnpackedSources)"
 		mkdir -p "${dir}"
@@ -252,7 +252,7 @@ function deployAppNoStart() {
 	echo "Deploying app with name [${lowerCaseAppName}], env [${env}] and host [${hostname}] with manifest file [${pathToManifest}]"
 	"${CF_BIN}" push "${lowerCaseAppName}" -f "${pathToManifest}" -p "$( pathToPushToCf "${artifactName}" )" -n "${hostname}" -i "${instances}" --no-start
 	setEnvVar "${lowerCaseAppName}" 'APP_BINARY' "${artifactName}.${BINARY_EXTENSION}"
-	if [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE}" ]]; then
+	if [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE_NAME}" ]]; then
 		popd
 	fi
 }
@@ -266,14 +266,14 @@ function getArtifactType() {
 		artifactType="$( echo "${PARSED_YAML}" | jq -r '.artifact_type' )"
 		if [[ "${artifactType}" == "null" ]]; then
 			if [[ "${LANGUAGE_TYPE}" == "php" ]]; then
-				artifactType="${SOURCE_ARTIFACT_TYPE}"
+				artifactType="${SOURCE_ARTIFACT_TYPE_NAME}"
 			else
-				artifactType="${BINARY_ARTIFACT_TYPE}"
+				artifactType="${BINARY_ARTIFACT_TYPE_NAME}"
 			fi
 		fi
 		toLowerCase "${artifactType}"
 	else
-		echo "${BINARY_ARTIFACT_TYPE}"
+		echo "${BINARY_ARTIFACT_TYPE_NAME}"
 	fi
 }
 
@@ -281,9 +281,9 @@ function pathToPushToCf() {
 	local artifactName="${1}"
 	local artifactType
 	artifactType="$( getArtifactType )"
-	if [[ "${artifactType}" == "${BINARY_ARTIFACT_TYPE}" ]]; then
+	if [[ "${artifactType}" == "${BINARY_ARTIFACT_TYPE_NAME}" ]]; then
 		echo "${OUTPUT_FOLDER}/${artifactName}.${BINARY_EXTENSION}"
-	elif [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE}" ]]; then
+	elif [[ "${artifactType}" == "${SOURCE_ARTIFACT_TYPE_NAME}" ]]; then
 		echo "."
 	else
 		echo "Unknown artifact type"
