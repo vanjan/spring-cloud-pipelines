@@ -19,7 +19,8 @@ function build() {
 }
 
 function downloadAppBinary() {
-	echo "Nothing to download"
+	echo "Nothing to download - will call npm install to speed things up"
+	"${NPM_BIN}" install
 }
 
 function apiCompatibilityCheck() {
