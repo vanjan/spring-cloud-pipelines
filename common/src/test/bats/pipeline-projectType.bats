@@ -43,11 +43,10 @@ teardown() {
 
 @test "should return empty when no language is present in parsed descriptor" {
 	PARSED_YAML='{"foo":"foo"}'
-	source "${SOURCE_DIR}/projectType/pipeline-projectType.sh"
 
-	result="$(getLanguageType)"
+	run "${SOURCE_DIR}/projectType/pipeline-projectType.sh"
 
-	assert_equal "" "${result}"
+	assert_failure
 }
 
 @test "should return php if composer.json is found" {

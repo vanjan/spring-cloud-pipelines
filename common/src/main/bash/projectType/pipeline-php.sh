@@ -157,4 +157,5 @@ function installPhpIfMissing() {
 	fi
 }
 
+export ARTIFACT_TYPE
 ARTIFACT_TYPE="${SOURCE_ARTIFACT_TYPE_NAME}"
